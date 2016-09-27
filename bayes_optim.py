@@ -93,7 +93,7 @@ class BayesianOptimization(object):
 
         for x_try in x_tries:
             # Find the minimum of minus the acquisition function
-            res = differential_evolution(lambda x: -self.ucb.getScre(x.reshape(1, -1)), self.bounds)
+            res = differential_evolution(lambda x: -self.ucb.getScore(x.reshape(1, -1)), self.bounds)
             # Store it if better than previous minimum(maximum).
             if max_acq is None or -res.fun >= max_acq:
                 x_max = res.x
@@ -303,3 +303,6 @@ class BayesianOptimization(object):
         # Print a final report if verbose active.
         if self.verbose:
             self.plog.print_summary()
+            
+        return self.res
+        
