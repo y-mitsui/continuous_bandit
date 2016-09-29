@@ -1,17 +1,44 @@
 from __future__ import print_function
 from __future__ import division
 import numpy as np
-from sklearn.gaussian_process import GaussianProcessRegressor
 from scipy.optimize import differential_evolution
 from helpers import unique_rows, PrintLog
+from scipy.linalg import cholesky, cho_solve
     
+class PyGaussianProcess:
+    def __init__(self, kernel, alpha=1e-4):
+        self.kernel_ = kernel
+        self.alpha = alpha
+        
+    def fit(self, sample_X, sample_y):
+        self.y_mean = np.mean(sample_y, axis=0)
+        sample_y = sample_y - self.y_mean
+        self.X_mean = np.mean(sample_X, axis=0)
+        self.X_std = np.std(sample_X, axis=0)
+        sample_X = (sample_X - self.X_mean) / self.X_std
+        
+        self.X_train_ = sample_X
+        K = self.kernel_(self.X_train_)
+        K[np.diag_indices_from(K)] += self.alpha
+        self.L_ = cholesky(K, lower=True)  # Line 2
+        self.alpha_ = cho_solve((self.L_, True), sample_y)  # Line 3
+
+    def predict(self, sample_X):
+        sample_X = (sample_X - self.X_mean) / self.X_std
+        K_trans = self.kernel_(sample_X, self.X_train_)
+        y_mean = K_trans.dot(self.alpha_)  # Line 4 (y_mean = f_star)
+        y_mean = self.y_mean + y_mean  # undo normal.
+        v = cho_solve((self.L_, True), K_trans.T)  # Line 5
+        y_cov = self.kernel_(sample_X) - K_trans.dot(v)  # Line 6
+        return y_mean, y_cov
+        
 class Ucb:
     def __init__(self, estimator, kappa):
         self.estimator = estimator
         self.kappa = kappa
         
     def getScore(self, x):
-        mean, var = self.estimator.predict(x, return_cov=True)
+        mean, var = self.estimator.predict(x)
         return mean + self.kappa * np.sqrt(var)
 
 class BayesianOptimization(object):
@@ -67,8 +94,8 @@ class BayesianOptimization(object):
         # is scikit-learn. So I'll pick the easy route here and simple specify
         # only theta0.
         
-        self.gp = GaussianProcessRegressor(kernel=kernel, normalize_y=True, optimizer=None)
-
+        self.gp = PyGaussianProcess(kernel=kernel)
+        
         # PrintLog object
         self.plog = PrintLog(self.keys)
 
@@ -245,7 +272,7 @@ class BayesianOptimization(object):
         y_max = self.Y.max()
 
         # Set parameters if any was passed
-        self.gp.set_params(**gp_params)
+        # self.gp.set_params(**gp_params)
 
         # Find unique rows of X to avoid GP from breaking
         ur = unique_rows(self.X)
