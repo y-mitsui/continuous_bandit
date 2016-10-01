@@ -1,5 +1,5 @@
 # continuous_bandit
-bayesian optimizetion using gaussian process that optimized  by cuda.
+bayesian optimizetion using gaussian process
 
 # requirement
 * scikit-learn >= 0.18rc1
