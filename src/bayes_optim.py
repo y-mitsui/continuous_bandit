@@ -5,7 +5,7 @@ from scipy.optimize import differential_evolution
 from helpers import unique_rows, PrintLog
 from scipy.linalg import cholesky, cho_solve
     
-class PyGaussianProcess:
+class _PyGaussianProcess:
     def __init__(self, kernel, alpha=1e-4):
         self.kernel_ = kernel
         self.alpha = alpha
@@ -32,7 +32,7 @@ class PyGaussianProcess:
         y_cov = self.kernel_(sample_X) - K_trans.dot(v)  # Line 6
         return y_mean, y_cov
         
-class Ucb:
+class _Ucb:
     def __init__(self, estimator, kappa):
         self.estimator = estimator
         self.kappa = kappa
@@ -42,20 +42,22 @@ class Ucb:
         return mean + self.kappa * np.sqrt(var)
 
 class BayesianOptimization(object):
-
-    def __init__(self, f, pbounds, kernel, kappa=2.576, verbose=1):
-        """
-        :param f:
+    """
+        :param f: callable
             Function to be maximized.
 
-        :param pbounds:
+        :param pbounds: dict
             Dictionary with parameters names as keys and a tuple with minimum
             and maximum values.
-
-        :param verbose:
+            e.g. {"parameter name1": (minium value, maxium value), "parameter name2": (minium value, maxium value), ...}
+        :param kernel: mixed
+            Kernel Object of gaussian_process of scikit-learn
+        :param verbose: int
             Whether or not to print progress.
 
-        """
+    """
+    def __init__(self, f, pbounds, kernel, kappa=2.576, verbose=1):
+        
         # Store the original dictionary
         self.pbounds = pbounds
 
@@ -94,7 +96,7 @@ class BayesianOptimization(object):
         # is scikit-learn. So I'll pick the easy route here and simple specify
         # only theta0.
         
-        self.gp = PyGaussianProcess(kernel=kernel)
+        self.gp = _PyGaussianProcess(kernel=kernel)
         
         # PrintLog object
         self.plog = PrintLog(self.keys)
@@ -109,9 +111,9 @@ class BayesianOptimization(object):
         # Verbose
         self.verbose = verbose
         
-        self.ucb = Ucb(self.gp, kappa)
+        self.ucb = _Ucb(self.gp, kappa)
 
-    def acq_max(self):
+    def _acq_max(self):
         x_max = self.bounds[:, 0]
         max_acq = None
 
@@ -177,7 +179,9 @@ class BayesianOptimization(object):
         Method to explore user defined points
 
         :param points_dict:
-        :return:
+            explore points
+            e.g. {"parameter name1": (explore value1, explore value2, ... ), "parameter name2": (explore value1, explore value2, ... ), ...}
+        :return: Nothing
         """
 
         # Consistency check
@@ -240,25 +244,14 @@ class BayesianOptimization(object):
     def maximize(self, init_points=5, n_iter=25, **gp_params):
         """
         Main optimization method.
-
-        Parameters
-        ----------
-        :param init_points:
-            Number of randomly chosen points to sample the
-            target function before fitting the gp.
-
-        :param n_iter:
-            Total number of times the process is to repeated. Note that
-            currently this methods does not have stopping criteria (due to a
-            number of reasons), therefore the total number of points to be
-            sampled must be specified.
-
-        :param gp_params:
-            Parameters to be passed to the Scikit-learn Gaussian Process object
-
-        Returns
-        -------
-        :return: Nothing
+        
+        :param init_points: int
+            number of initial exploer point that decisioned by random
+        :param n_iter: int
+            number of iteration of exploer
+        :return: dict
+            max parameter and all exploered parameter's point
+        
         """
         # Reset timer
         self.plog.reset_timer()
@@ -279,7 +272,7 @@ class BayesianOptimization(object):
         self.gp.fit(self.X[ur], self.Y[ur])
 
         # Finding argmax of the acquisition function.
-        x_max = self.acq_max()
+        x_max = self._acq_max()
 
         # Print new header
         if self.verbose:
@@ -311,7 +304,7 @@ class BayesianOptimization(object):
                 y_max = self.Y[-1]
 
             # Maximize acquisition function to find next probing point
-            x_max = self.acq_max()
+            x_max = self._acq_max()
 
             # Print stuff
             if self.verbose:

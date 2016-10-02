@@ -1,0 +1,7 @@
+bayes_optim module
+==================
+
+.. automodule:: bayes_optim
+    :members:
+    :undoc-members:
+    :show-inheritance:

@@ -1,0 +1,187 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>helpers module &#8212; src  documentation</title>
+    
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="top" title="src  documentation" href="index.html" />
+    <link rel="prev" title="bayes_optim module" href="bayes_optim.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="bayes_optim.html" title="bayes_optim module"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">src  documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-helpers">
+<span id="helpers-module"></span><h1>helpers module<a class="headerlink" href="#module-helpers" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="helpers.BColours">
+<em class="property">class </em><code class="descclassname">helpers.</code><code class="descname">BColours</code><a class="reference internal" href="_modules/helpers.html#BColours"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#helpers.BColours" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="attribute">
+<dt id="helpers.BColours.BLUE">
+<code class="descname">BLUE</code><em class="property"> = '\x1b[94m'</em><a class="headerlink" href="#helpers.BColours.BLUE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="helpers.BColours.CYAN">
+<code class="descname">CYAN</code><em class="property"> = '\x1b[36m'</em><a class="headerlink" href="#helpers.BColours.CYAN" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="helpers.BColours.ENDC">
+<code class="descname">ENDC</code><em class="property"> = '\x1b[0m'</em><a class="headerlink" href="#helpers.BColours.ENDC" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="helpers.BColours.GREEN">
+<code class="descname">GREEN</code><em class="property"> = '\x1b[32m'</em><a class="headerlink" href="#helpers.BColours.GREEN" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="helpers.BColours.MAGENTA">
+<code class="descname">MAGENTA</code><em class="property"> = '\x1b[35m'</em><a class="headerlink" href="#helpers.BColours.MAGENTA" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="helpers.BColours.RED">
+<code class="descname">RED</code><em class="property"> = '\x1b[31m'</em><a class="headerlink" href="#helpers.BColours.RED" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="helpers.PrintLog">
+<em class="property">class </em><code class="descclassname">helpers.</code><code class="descname">PrintLog</code><span class="sig-paren">(</span><em>params</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/helpers.html#PrintLog"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#helpers.PrintLog" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="helpers.PrintLog.print_header">
+<code class="descname">print_header</code><span class="sig-paren">(</span><em>initialization=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/helpers.html#PrintLog.print_header"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#helpers.PrintLog.print_header" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="helpers.PrintLog.print_step">
+<code class="descname">print_step</code><span class="sig-paren">(</span><em>x</em>, <em>y</em>, <em>warning=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/helpers.html#PrintLog.print_step"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#helpers.PrintLog.print_step" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="helpers.PrintLog.print_summary">
+<code class="descname">print_summary</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/helpers.html#PrintLog.print_summary"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#helpers.PrintLog.print_summary" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="helpers.PrintLog.reset_timer">
+<code class="descname">reset_timer</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/helpers.html#PrintLog.reset_timer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#helpers.PrintLog.reset_timer" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="helpers.unique_rows">
+<code class="descclassname">helpers.</code><code class="descname">unique_rows</code><span class="sig-paren">(</span><em>a</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/helpers.html#unique_rows"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#helpers.unique_rows" title="Permalink to this definition">¶</a></dt>
+<dd><p>A functions to trim repeated rows that may appear when optimizing.
+This is necessary to avoid the sklearn GP object from breaking</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>a</strong> &#8211; array to trim repeated rows from</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">mask of unique rows</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="bayes_optim.html"
+                        title="previous chapter">bayes_optim module</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/helpers.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="bayes_optim.html" title="bayes_optim module"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">src  documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2016, Author.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5a1.
+    </div>
+  </body>
+</html>
