@@ -9,4 +9,7 @@ bayesian optimizetion using gaussian process that optimized  by cuda.
 # install
 ```
 python setup.py build && python setup.py install
+```
 
+# usage
+Read Documents/index.html
