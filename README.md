@@ -12,4 +12,4 @@ python setup.py build && python setup.py install
 ```
 
 # usage
-Read Documents/index.html
+Read example.py and Documents/index.html
