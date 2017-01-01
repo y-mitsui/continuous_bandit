@@ -1,5 +1,5 @@
 # continuous_bandit
-bayesian optimizetion using gaussian process
+bayesian optimization using gaussian process
 
 # requirement
 * scikit-learn >= 0.18rc1
