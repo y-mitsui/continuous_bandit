@@ -2,11 +2,11 @@ from __future__ import print_function
 from __future__ import division
 import numpy as np
 from scipy.optimize import differential_evolution
-from helpers import unique_rows, PrintLog
+from helpers import PrintLog
 from scipy.linalg import cholesky, cho_solve
     
 class _PyGaussianProcess:
-    def __init__(self, kernel, alpha=1e-4):
+    def __init__(self, kernel, alpha=1e-3):
         self.kernel_ = kernel
         self.alpha = alpha
         
@@ -23,6 +23,7 @@ class _PyGaussianProcess:
         self.L_ = cholesky(K, lower=True)  # Line 2
         self.alpha_ = cho_solve((self.L_, True), sample_y)  # Line 3
 
+        #kernel_predict = KernelPredict()
     def predict(self, sample_X):
         sample_X = (sample_X - self.X_mean) / self.X_std
         K_trans = self.kernel_(sample_X, self.X_train_)
@@ -56,7 +57,7 @@ class BayesianOptimization(object):
             Whether or not to print progress.
 
     """
-    def __init__(self, f, pbounds, kernel, kappa=2.576, verbose=1):
+    def __init__(self, f, pbounds, kernel, kappa=2.576, verbose=1, gp_regulation=1e-2):
         
         # Store the original dictionary
         self.pbounds = pbounds
@@ -96,7 +97,7 @@ class BayesianOptimization(object):
         # is scikit-learn. So I'll pick the easy route here and simple specify
         # only theta0.
         
-        self.gp = _PyGaussianProcess(kernel=kernel)
+        self.gp = _PyGaussianProcess(kernel=kernel, alpha=gp_regulation)
         
         # PrintLog object
         self.plog = PrintLog(self.keys)
@@ -118,11 +119,11 @@ class BayesianOptimization(object):
         max_acq = None
 
         x_tries = np.random.uniform(self.bounds[:, 0], self.bounds[:, 1],
-                                    size=(100, self.bounds.shape[0]))
+                                    size=(1, self.bounds.shape[0]))
 
         for x_try in x_tries:
             # Find the minimum of minus the acquisition function
-            res = differential_evolution(lambda x: -self.ucb.getScore(x.reshape(1, -1)), self.bounds)
+            res = differential_evolution(lambda x: -self.ucb.getScore(x.reshape(1, -1)), self.bounds, tol=0.001, maxiter=400, popsize=100)
             # Store it if better than previous minimum(maximum).
             if max_acq is None or -res.fun >= max_acq:
                 x_max = res.x
@@ -132,7 +133,7 @@ class BayesianOptimization(object):
         # point technicalities this is not always the case.
         return np.clip(x_max, self.bounds[:, 0], self.bounds[:, 1])
     
-    def init(self, init_points):
+    def init(self, init_points=5):
         """
         Initialization method to kick start the optimization process. It is a
         combination of points passed by the user, and randomly sampled ones.
@@ -241,6 +242,31 @@ class BayesianOptimization(object):
             # Reset all entries, even if the same.
             self.bounds[row] = self.pbounds[key]
 
+    def userInit(self, init_points=5):
+        self.init(init_points)
+
+    def ones(self):
+        self.gp.fit(self.X, self.Y)
+        x_max = self._acq_max()
+        
+        if np.any((self.X - x_max).sum(axis=1) == 0):
+            x_max = np.random.uniform(self.bounds[:, 0],
+                                      self.bounds[:, 1],
+                                      size=self.bounds.shape[0])
+                                      
+        self.X = np.vstack((self.X, x_max.reshape((1, -1))))
+        self.Y = np.append(self.Y, self.f(**dict(zip(self.keys, x_max))))
+            
+        self.plog.print_summary()
+        
+        self.res['max'] = {'max_val': self.Y.max(),
+                           'max_params': dict(zip(self.keys, self.X[self.Y.argmax()]))
+                          }
+        self.res['all']['values'].append(self.Y[-1])
+        self.res['all']['params'].append(dict(zip(self.keys, self.X[-1])))
+        
+        return self.Y[-1]
+        
     def maximize(self, init_points=5, n_iter=25, **gp_params):
         """
         Main optimization method.
@@ -267,9 +293,7 @@ class BayesianOptimization(object):
         # Set parameters if any was passed
         # self.gp.set_params(**gp_params)
 
-        # Find unique rows of X to avoid GP from breaking
-        ur = unique_rows(self.X)
-        self.gp.fit(self.X[ur], self.Y[ur])
+        self.gp.fit(self.X, self.Y)
 
         # Finding argmax of the acquisition function.
         x_max = self._acq_max()
@@ -281,7 +305,9 @@ class BayesianOptimization(object):
         for i in range(n_iter):
             # Test if x_max is repeated, if it is, draw another one at random
             # If it is repeated, print a warning
+            
             pwarning = False
+            """
             if np.any((self.X - x_max).sum(axis=1) == 0):
 
                 x_max = np.random.uniform(self.bounds[:, 0],
@@ -289,15 +315,13 @@ class BayesianOptimization(object):
                                           size=self.bounds.shape[0])
 
                 pwarning = True
-
+            """
+            
             # Append most recently generated values to X and Y arrays
             self.X = np.vstack((self.X, x_max.reshape((1, -1))))
             self.Y = np.append(self.Y, self.f(**dict(zip(self.keys, x_max))))
-
-            # Updating the GP.
-            ur = unique_rows(self.X)
             
-            self.gp.fit(self.X[ur], self.Y[ur])
+            self.gp.fit(self.X, self.Y)
 
             # Update maximum value to search for next probe point.
             if self.Y[-1] > y_max:

@@ -47,7 +47,7 @@ class PrintLog(object):
         self.last_round = datetime.now()
 
         # sizes of parameters name and all
-        self.sizes = [max(len(ps), 7) for ps in params]
+        self.sizes = [max(len(ps), 9) for ps in params]
 
         # Sorted indexes to access parameters
         self.sorti = sorted(range(len(self.params)),
@@ -97,14 +97,14 @@ class PrintLog(object):
                 print("{0}{2: >{3}.{4}f}{1}".format(BColours.GREEN, BColours.ENDC,
                                                     x[index],
                                                     self.sizes[index] + 2,
-                                                    min(self.sizes[index] - 3, 6 - 2)),
+                                                    min(self.sizes[index] - 3, 9 - 2)),
                       end=" | ")
         else:
             print("{: >10.5f}".format(y), end=" | ")
             for index in self.sorti:
                 print("{0: >{1}.{2}f}".format(x[index],
                                               self.sizes[index] + 2,
-                                              min(self.sizes[index] - 3, 6 - 2)),
+                                              min(self.sizes[index] - 3, 9 - 2)),
                       end=" | ")
 
         if warning:
